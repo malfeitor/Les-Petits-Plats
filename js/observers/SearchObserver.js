@@ -37,9 +37,7 @@ export class SearchObserver {
     const startTime = Date.now()
     switch (type) {
       case 'bar':
-        console.log('Text : ' + text)
         working = [...this._shownRecipes]
-        console.log(working[0])
         for (let i = 0; i < working.length; i++) {
           contains = false
           if (working[i].description.includes(text)) contains = true
