@@ -44,6 +44,9 @@ export class SearchObserver {
           contains = false
           if (working[i].description.includes(text)) contains = true
           if (working[i].name.includes(text)) contains = true
+          for (let j = 0; j < working[i].ingredients.length; j++) {
+            if (working[i].ingredients[j].ingredient.includes(text)) contains = true
+          }
           if (!contains) {
             working[i].DOM.classList.add('hidden')
             this._hiddenRecipes.push(working[i])
