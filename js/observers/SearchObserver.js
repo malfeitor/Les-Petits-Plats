@@ -11,6 +11,7 @@ export class SearchObserver {
     this._hiddenRecipes = []
     this._shownRecipes = this._recipesList
     this.filters = data.filters
+    this._searchLength = 0
   }
 
   searchByTag (text, type, working) {
@@ -37,7 +38,9 @@ export class SearchObserver {
     const startTime = Date.now()
     switch (type) {
       case 'bar':
+        if (this._searchLength > text.length) this.fire('', 'refresh')
         working = [...this._shownRecipes]
+        this._searchLength = text.length
         for (let i = 0; i < working.length; i++) {
           contains = false
           if (working[i].description.includes(text)) contains = true
