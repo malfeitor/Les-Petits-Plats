@@ -11,6 +11,7 @@ export class SearchObserver {
     this._hiddenRecipes = []
     this._shownRecipes = this._recipesList
     this.filters = data.filters
+    this._searchLength = 0
   }
 
   searchByTag (text, type, working) {
@@ -36,7 +37,16 @@ export class SearchObserver {
     const startTime = Date.now()
     switch (type) {
       case 'bar':
-        console.log('Text : ' + text)
+        if (this._searchLength > text.length) this.fire('', 'refresh')
+        this._searchLength = text.length
+        working = [...this._shownRecipes]
+        working.filter(item => !item.name.includes(text) &&
+          !item.description.includes(text) &&
+          !item.ingredients.some(ing => ing.ingredient.includes(text)))
+          .forEach(item => {
+            item.DOM.classList.add('hidden')
+            this._hiddenRecipes.push(item)
+          })
         break
       case 'ingredients':
       case 'ustensils':
