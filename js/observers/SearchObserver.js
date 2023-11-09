@@ -43,8 +43,8 @@ export class SearchObserver {
         this._searchLength = text.length
         for (let i = 0; i < working.length; i++) {
           contains = false
-          if (working[i].description.includes(text)) contains = true
-          if (working[i].name.includes(text)) contains = true
+          if (working[i].description.includes(text)) continue
+          if (working[i].name.includes(text)) continue
           for (let j = 0; j < working[i].ingredients.length; j++) {
             if (working[i].ingredients[j].ingredient.includes(text)) contains = true
           }
