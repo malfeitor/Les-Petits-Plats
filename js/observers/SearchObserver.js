@@ -32,27 +32,32 @@ export class SearchObserver {
     return working
   }
 
+  searchByBar (text, working) {
+    let contains = false
+    text = text.toLowerCase()
+    for (let i = 0; i < working.length; i++) {
+      contains = false
+      if (working[i].description.toLowerCase().includes(text)) continue
+      if (working[i].name.toLowerCase().includes(text)) continue
+      for (let j = 0; j < working[i].ingredients.length; j++) {
+        if (working[i].ingredients[j].ingredient.toLowerCase().includes(text)) contains = true
+      }
+      if (!contains) {
+        working[i].DOM.classList.add('hidden')
+        this._hiddenRecipes.push(working[i])
+      }
+    }
+  }
+
   fire (text, type = 'bar') {
     let working = []
-    let contains = false
     const startTime = Date.now()
     switch (type) {
       case 'bar':
         if (this._searchLength > text.length) this.fire('', 'refresh')
         working = [...this._shownRecipes]
         this._searchLength = text.length
-        for (let i = 0; i < working.length; i++) {
-          contains = false
-          if (working[i].description.includes(text)) continue
-          if (working[i].name.includes(text)) continue
-          for (let j = 0; j < working[i].ingredients.length; j++) {
-            if (working[i].ingredients[j].ingredient.includes(text)) contains = true
-          }
-          if (!contains) {
-            working[i].DOM.classList.add('hidden')
-            this._hiddenRecipes.push(working[i])
-          }
-        }
+        this.searchByBar(text, working)
         break
       case 'ingredients':
       case 'ustensils':
