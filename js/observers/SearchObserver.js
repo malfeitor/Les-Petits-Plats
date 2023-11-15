@@ -32,6 +32,17 @@ export class SearchObserver {
     return working
   }
 
+  searchByBar (text, working) {
+    text = text.toLowerCase()
+    working.filter(item => !item.name.toLowerCase().includes(text) &&
+      !item.description.toLowerCase().includes(text) &&
+      !item.ingredients.some(ing => ing.ingredient.toLowerCase().includes(text)))
+      .forEach(item => {
+        item.DOM.classList.add('hidden')
+        this._hiddenRecipes.push(item)
+      })
+  }
+
   fire (text, type = 'bar') {
     let working = []
     const startTime = Date.now()
@@ -40,13 +51,7 @@ export class SearchObserver {
         if (this._searchLength > text.length) this.fire('', 'refresh')
         this._searchLength = text.length
         working = [...this._shownRecipes]
-        working.filter(item => !item.name.includes(text) &&
-          !item.description.includes(text) &&
-          !item.ingredients.some(ing => ing.ingredient.includes(text)))
-          .forEach(item => {
-            item.DOM.classList.add('hidden')
-            this._hiddenRecipes.push(item)
-          })
+        this.searchByBar(text, working)
         break
       case 'ingredients':
       case 'ustensils':
